@@ -1,1 +1,6 @@
-
+{
+    "users": [
+        {"hwid": "f6554852", "username": "user1"},
+        {"hwid": "7890XYZ", "username": "user2"}
+    ]
+}
