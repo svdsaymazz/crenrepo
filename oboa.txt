@@ -1,6 +1,7 @@
 {
-    "users": [
-        {"hwid": "pk", "username": "user1"},
-        {"hwid": "7890XYZ", "username": "user2"}
-    ]
+  "hwids": [
+    "hwid1...",
+    "hwid2...",
+    "..."
+  ]
 }
