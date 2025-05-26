@@ -1,5 +1,5 @@
 @echo off
-echo eger boyle kaldiysa gorev yoneticisinden hile exesini kapatin ve bekleyin...
+echo bekleyin...
 
 :loop
 tasklist | find /i "PlanetVPN.exe" >nul
